@@ -33,7 +33,7 @@ if (window.location.href.indexOf("https://hiring.monster") == 0) {
                 $("#candidate-detail-tabs #divAnchorTab a:eq(0)").click()
                 //download_file();
                 var downloadLocation = "https://hiring.monster.com" + $("a.at-actionDownloadWordLink:eq(1)").attr('href');
-                //setTimeout(download_file(downloadLocation), 5000);
+                setTimeout(download_file(downloadLocation), 5000);
 
                 //To switch throw tabs 
                 //For Candidate Details
