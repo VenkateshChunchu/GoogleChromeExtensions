@@ -1,0 +1,22 @@
+{
+  "manifest_version": 2,
+
+  "name": "Chrome Extension for Job Portal",
+  "description": "This extension will get the Candidate Profile from the web",
+  "version": "1.0",
+  "permissions": [
+    "https://hiring.monster.com/"
+  ],
+  "browser_action": {
+    "default_icon": "img/icon.png",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      //https://hiring.monster.com/jcm/resumesearch/EnhancedSearchResults.aspx?*
+      //https://hiring.monster.com/jcm/resumesearch/ResumeView.aspx
+      "matches": [ "https://hiring.monster.com/jcm/resumesearch/ResumeView.aspx?*" ], // "https://hiring.monster.com/jcm/resumesearch/*", "<all_urls>"
+      "js": [ "jquery-3.2.1.min.js", "popup.js" ]
+    }
+  ]
+}
