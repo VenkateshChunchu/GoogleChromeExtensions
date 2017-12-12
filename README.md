@@ -1,2 +1,2 @@
 # GoogleChromeExtensions
-Extensions development for Scrapping the web
+Extensions development for Scrapping the Web
