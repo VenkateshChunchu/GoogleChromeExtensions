@@ -1,0 +1,100 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using System.ServiceModel.Activation;
+using System.Text;
+using System.Runtime.Serialization.Json;
+using System.IO;
+
+
+
+namespace ExportProfileDetailsAPI
+{
+
+    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "GetProfileDetailsService" in code, svc and config file together.
+    // NOTE: In order to launch WCF Test Client for testing this service, please select GetProfileDetailsService.svc or GetProfileDetailsService.svc.cs at the Solution Explorer and start debugging.
+    [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
+    public class GetProfileDetailsService : IGetProfileDetailsService
+    {
+        public ResponseProfileDetails Auth(RequestProfileDetails rdata)
+        {
+            var data = rdata.details.Split('|');
+            var response = new ResponseProfileDetails
+            {
+                Name = data[0]
+            };
+            return response;
+        }
+
+        public string JSONData(string id)
+        {
+            try
+            {
+                StreamWriter sw = new StreamWriter(@"D:\SampleTest.txt");
+                //Write a line of text
+                sw.WriteLine("Hello World!!" + id.ToString());
+                sw.WriteLine("From the StreamWriter class and the id is :"+id.ToString());
+                //Close the file
+                sw.Close();
+                return "Done"+id;
+            }
+            catch (Exception e)
+            {
+                return "Error in Writing to the file";
+            }
+        }
+        public string XMLData(string id)
+        {
+            try
+            {
+                StreamWriter sw = new StreamWriter(@"D:\SampleTest.txt");
+                //Write a line of text
+                sw.WriteLine("Hello World!!" + id.ToString());
+                sw.WriteLine("From the StreamWriter class and the id is :" + id.ToString());
+                //Close the file
+                sw.Close();
+                return "Done";
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+                return "Error in Writing to the file";
+            }
+            finally
+            {
+                Console.WriteLine("Executing finally block.");
+            }
+        }
+    }
+}
+//***********************************************************************************************************************
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using System.ServiceModel.Web;
+using System.Text;
+
+namespace ExportProfileDetailsAPI
+{
+    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the interface name "IGetProfileDetailsService" in both code and config file together.
+    
+    [ServiceContract]
+    public interface IGetProfileDetailsService
+    {
+        [OperationContract]
+        [WebInvoke(Method = "POST", ResponseFormat = WebMessageFormat.Json, UriTemplate = "json/{id}")]
+        string JSONData(string id);
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Xml, UriTemplate = "xml/{id}")]
+        string XMLData(string id);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "auth")]
+        ResponseProfileDetails Auth(RequestProfileDetails rdata);
+
+    }
+}
