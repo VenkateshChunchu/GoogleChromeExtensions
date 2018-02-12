@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Script.Serialization;
@@ -9,6 +9,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Web.Http.Cors;
+using System.Text.RegularExpressions;
 
 namespace RecPortalAPI.Controllers
 {
@@ -42,7 +43,7 @@ namespace RecPortalAPI.Controllers
 
                         if ("" == mp.Name || mp.Name.Length > 1)
                         {
-                            profile = profiles.Where(s => s.ToLower().Contains(mp.Name.ToLower())).FirstOrDefault();
+                            profile = profiles.Where(s => s.ToLower().Replace((char)160, ' ').Contains(mp.Name.ToLower())).FirstOrDefault();
 
                             if (!string.IsNullOrEmpty(profile))
                             {
@@ -82,6 +83,8 @@ namespace RecPortalAPI.Controllers
             {
                 if (profileDetails != null)
                 {
+                    //profileDetails.MainDetails.CandidateName = Regex.Replace(profileDetails.MainDetails.CandidateName, "[^a-zA-Z]", "");
+                    profileDetails.MainDetails.CandidateName = profileDetails.MainDetails.CandidateName.Replace('.', ' ');
                     string profileFilePath = profileFolderPath + profileDetails.MainDetails.CandidateName + "-" + profileDetails.MainDetails.Email + ".json";
                     var json = new JavaScriptSerializer().Serialize(profileDetails);
                     File.WriteAllText(profileFilePath, json.Replace("undefined", "-").Replace("Unknown", "-"));
