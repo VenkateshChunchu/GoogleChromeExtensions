@@ -35,32 +35,22 @@ namespace RecPortalAPI.Controllers
                 if (nameList.Length != 0 && profiles.Length != 0)
                 {
                     List<MatchedProfiles> matchedProfileList = new List<MatchedProfiles>();
-
                     foreach (string name in nameList)
                     {
                         MatchedProfiles mp = new MatchedProfiles();
                         mp.Name = name;
-
+                        mp.Email = "Not Found";
+                        mp.Status = "No Match";
+                        
                         if ("" == mp.Name || mp.Name.Length > 1)
                         {
                             profile = profiles.Where(s => s.ToLower().Replace((char)160, ' ').Contains(mp.Name.ToLower())).FirstOrDefault();
-
                             if (!string.IsNullOrEmpty(profile))
                             {
                                 mp.Email = profile.Split('-').Last().Replace(".json", "");
                                 mp.Status = "Exact Match";
                                 mp.CreatedTime = File.GetLastWriteTimeUtc(profile);
                             }
-                            else
-                            {
-                                mp.Email = "Not Found";
-                                mp.Status = "No Match";
-                            }
-                        }
-                        else
-                        {
-                            mp.Email = "Not Found";
-                            mp.Status = "No Match";
                         }
 
                         matchedProfileList.Add(mp);
@@ -90,10 +80,7 @@ namespace RecPortalAPI.Controllers
                     File.WriteAllText(profileFilePath, json.Replace("undefined", "-").Replace("Unknown", "-"));
                     return Request.CreateResponse(HttpStatusCode.OK, "Profile Saved.");
                 }
-                else
-                {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, "Profile Details does not provided.");
-                }
+                return Request.CreateResponse(HttpStatusCode.NotFound, "Profile Details does not provided.");
             }
             catch (Exception ex)
             {
@@ -119,10 +106,7 @@ namespace RecPortalAPI.Controllers
                         DateTime profileUpdatedTime = File.GetLastWriteTimeUtc(profile);
                         return Request.CreateResponse(HttpStatusCode.OK, profileUpdatedTime);
                     }
-                    else
-                    {
-                        return Request.CreateResponse(HttpStatusCode.OK, false);
-                    }
+                    return Request.CreateResponse(HttpStatusCode.OK, false);
                 }
 
                 return Request.CreateResponse(HttpStatusCode.NotFound, "No Profile found in matching to email.");
